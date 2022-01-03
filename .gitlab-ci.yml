@@ -1,0 +1,28 @@
+#This is the continuous integration setting file
+image: node:latest
+
+before_script:
+  - yarn install
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+
+variables:
+  NODE_OPTIONS: --openssl-legacy-provider
+
+cache:
+  key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  script:
+    - CI=false yarn run build
+
+test:
+  stage: test
+  script:
+    - CI=false yarn run test
